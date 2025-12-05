@@ -1,62 +1,56 @@
-def find_best_left_digit(n):
-    s = str(n)
+def find_best_digit(s, positions_remaining):
+    """
+    Find the index of the best left digit in string s,
+    using the hop-based greedy algorithm.
+    """
     i = 0
-    while i < len(s) - 1:
-        jump = False
-        for j in range(i + 1, len(s)-1):
-            if s[i] < s[j]:
-                i = j
-                jump = True
+    while i < len(s):
+        jumped = False
+        for j in range(i + 1, len(s)):
+            remaining_after = len(s) - j  # digits including s[j]
+            if s[j] > s[i] and remaining_after >= positions_remaining:
+                i = j  # hop to bigger digit
+                jumped = True
                 break
-        if not jump:
+        if not jumped:
             break
-    return i  
+    return i  # index of chosen digit
 
 
-def find_best_joltage(n):
-    i = 0
-    while(i<12):
-        i += 1
-    return best_joltage
+def find_best_joltage(n, total_digits=12):
+    """
+    Build the largest possible `total_digits`-digit number
+    from n using the hop-based greedy algorithm.
+    """
+    s = str(n)
+    result = ""
+    positions_remaining = total_digits
+
+    while positions_remaining > 0:
+        best_index = find_best_digit(s, positions_remaining)
+        result += s[best_index]
+        # remove everything up to and including the chosen digit
+        s = s[best_index + 1:]
+        positions_remaining -= 1
+
+    return int(result)
 
 
-def check_invalid_ids(filename, output_file):
+def total_output_joltage(filename):
+    """
+    Compute the total sum of best joltages for each line in a file.
+    """
     total = 0
-    out = open(output_file, 'w')
     with open(filename, 'r') as file:
         for line in file:
             line = line.strip()
             if not line:
                 continue
-            lower = int(line.split('-')[0])
-            upper = int(line.split('-')[1].split(',')[0])
-            print(f"Processing range: {lower}-{upper}")
-            
-            range_sum = 0
-            for i in range(lower, upper + 1):
-                if  is_repeating_pattern(i): 
-                    out.write(f"{i}\n")
-            
-            print(f"  Range sum: {range_sum}")
-            total += range_sum
-    
-    out.close()
-    print(f"\nTotal sum: {total}")
-
-
-def total_output_joltage(filename):
-    total = 0
-    with open(filename, 'r') as file:
-        for line in file:
-            line = line.strip()
-            if not line:
-                continue  
-            joltage_sum = 0
-
             joltage_sum = find_best_joltage(int(line))
             total += joltage_sum
-    print(f"\nTotal sum: {total}")
 
+    print(f"\nTotal sum: {total}")
     return total
+
 
 total_output_joltage('./3rdday/input.txt')

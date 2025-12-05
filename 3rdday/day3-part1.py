@@ -17,9 +17,6 @@ def find_best_joltage(n):
     s = str(n)
     left_index = find_best_left_digit(n)
     left_digit = s[left_index]
-
-
-    # scan digits to the right of left_index for best partner
     best_joltage = -1
     for i in range(left_index + 1, len(s)):
         combination = int(left_digit + s[i])
@@ -27,30 +24,6 @@ def find_best_joltage(n):
             best_joltage = combination
 
     return best_joltage
-
-
-def check_invalid_ids(filename, output_file):
-    total = 0
-    out = open(output_file, 'w')
-    with open(filename, 'r') as file:
-        for line in file:
-            line = line.strip()
-            if not line:
-                continue
-            lower = int(line.split('-')[0])
-            upper = int(line.split('-')[1].split(',')[0])
-            print(f"Processing range: {lower}-{upper}")
-            
-            range_sum = 0
-            for i in range(lower, upper + 1):
-                if  is_repeating_pattern(i): 
-                    out.write(f"{i}\n")
-            
-            print(f"  Range sum: {range_sum}")
-            total += range_sum
-    
-    out.close()
-    print(f"\nTotal sum: {total}")
 
 
 def total_output_joltage(filename):
